@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreatePost from "./components/PostComponents/CreatePost"
 import Post from "./components/PostComponents/Post";
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,6 +9,17 @@ const app = () => {
   const user = {
     username: 'Aleks'
   }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const body = document.getElementsByTagName('body')[0];
+      const computedStyles = window.getComputedStyle(body);
+      const curr_bg_color = computedStyles.backgroundColor;
+
+      body.style.backgroundColor = curr_bg_color === 'rgb(18, 18, 18)' ? '#F0F0F0' : '#121212';
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const notifyError = (errorText) => {
     toast.error(errorText)
