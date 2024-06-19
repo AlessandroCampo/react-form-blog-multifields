@@ -4,6 +4,7 @@ import { FaRegComment, FaRegHeart, FaRetweet } from "react-icons/fa";
 import './post.css';
 import { formatTimestamp } from "../../utils.jsx";
 import CustomizedMenus from "../Dropdown";
+import { tags } from "../../utils.jsx";
 
 export default ({ user, post, setPostList }) => {
 
@@ -72,8 +73,26 @@ export default ({ user, post, setPostList }) => {
                     />
                 </figure>
 
-
             }
+
+            <div className="tags-container px-6  flex items-center gap-2">
+
+                {
+                    post.tags.length > 0 && post.tags.map((t, i) => {
+                        return (
+                            <span
+                                key={`post-tag-icon${i}`}
+                                className="text-theme"
+                            >
+                                {tags.find(tag => tag.label === t).checkedIcon}
+                            </span>
+
+                        )
+                    })
+                }
+            </div>
+
+
             <div className="lower">
                 <div className="icons-container">
                     <div className="iconandcounter">

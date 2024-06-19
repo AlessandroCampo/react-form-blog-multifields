@@ -16,6 +16,7 @@ import { postCategories, tags } from "../../utils.jsx";
 import { toast } from "react-toastify";
 
 import { Checkbox, colors } from "@mui/material";
+import TagCheckbox from "./Checkbox.jsx";
 
 
 export default ({ user, setPostList, notifyError }) => {
@@ -29,7 +30,8 @@ export default ({ user, setPostList, notifyError }) => {
         comments: [],
         likes: [],
         shares: [],
-        visible: 'initial value'
+        visible: 'initial value',
+        tags: []
     };
 
 
@@ -48,15 +50,25 @@ export default ({ user, setPostList, notifyError }) => {
     const updatePostData = (e) => {
         const { name, type, checked, value } = e.target;
         const newValue = type === 'checkbox' ? checked : value;
+        console.log(checked, e.target.value)
+        if (name === 'tags') {
+            let updatedTags = [...postData.tags];
+            if (checked) {
+                updatedTags = [...postData.tags, e.target.value];
+            } else {
+                updatedTags = postData.tags.filter(t => t !== e.target.value)
+            }
+            setPostData(oldValue => ({
+                ...oldValue,
+                tags: updatedTags
+            }));
+        } else {
+            setPostData(oldValue => ({
+                ...oldValue,
+                [name]: newValue
+            }));
+        }
 
-        console.log(name, newValue);
-
-        setPostData(oldValue => ({
-            ...oldValue,
-            [name]: newValue
-        }));
-
-        console.log(postData);
     };
 
     const handleFileUpload = (e) => {
@@ -88,6 +100,7 @@ export default ({ user, setPostList, notifyError }) => {
         }
         setPostList(oldPostList => [...oldPostList, { ...postData }]);
         setPostData(postDefault);
+        console.log(postData)
         toast.success('Il tuo post è stato creato correttamente')
     }
 
@@ -133,14 +146,17 @@ export default ({ user, setPostList, notifyError }) => {
             </div>
             <div className="useless-tags px-4">
                 {
+
                     tags.map((t, i) => {
+
                         return (
-                            <Checkbox
+                            <TagCheckbox
+                                t={t}
                                 key={`checkbox-tag-${i}`}
-                                {...t.label}
-                                icon={t.icon}
-                                checkedIcon={t.checkedIcon}
-                                style={{ color: '#DAA520' }}
+                                selected={postData.tags.includes(t.label)}
+                                cb={(event) => {
+                                    updatePostData(event)
+                                }}
 
                             />
                         )
